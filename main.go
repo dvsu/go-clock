@@ -102,19 +102,18 @@ func main() {
 		}
 
 		if slide {
+			cursor = max - l
 			if forward {
-				for i := 0; i < max-l; i++ {
+				for i := 0; i < cursor; i++ {
 					clockSlide[i] = blank
 				}
-				cursor = max - l
 				for i := cursor; i < max; i++ {
 					clockSlide[i] = clock[i-cursor]
 				}
 				l += 1
 			} else {
-				cursor = max - l
-				for i := 0; i < l; i++ {
-					clockSlide[i] = clock[i+cursor]
+				for i := cursor; i < max; i++ {
+					clockSlide[i-cursor] = clock[i]
 				}
 				for i := l; i < max; i++ {
 					clockSlide[i] = blank
