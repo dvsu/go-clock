@@ -4,4 +4,4 @@ Digital clock built and written in Go
 
 ## Screenshot
 
-<img src="images/screenshot_2.PNG" alt="Digital Clock" width="700"/>
+<img src="images/screenshot_3.PNG" alt="Digital Clock" width="800"/>
