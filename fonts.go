@@ -14,6 +14,18 @@ var separator = digit{
 	"     ",
 }
 
+var dot = digit{
+	"     ",
+	"     ",
+	"     ",
+	"     ",
+	"     ",
+	"     ",
+	"     ",
+	"     ",
+	" ░░░ ",
+}
+
 var blank = digit{
 	"     ",
 	"     ",

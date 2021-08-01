@@ -18,11 +18,15 @@ func main() {
 	// }
 
 	var (
-		clock = [8]digit{}
+		clock = [12]digit{}
 		t     time.Time
 		h     int
 		m     int
 		s     int
+		n     int
+		ms1   int
+		ms2   int
+		ms3   int
 		on    bool = true
 	)
 
@@ -31,7 +35,10 @@ func main() {
 		fmt.Print("\033[0;0H")
 		// get the latest time
 		t = time.Now()
-		h, m, s = t.Hour(), t.Minute(), t.Second()
+		h, m, s, n = t.Hour(), t.Minute(), t.Second(), t.Nanosecond()
+		ms1 = n / 100000000
+		ms2 = (n / 10000000) - (ms1 * 10)
+		ms3 = (n / 1000000) - (ms1 * 100) - (ms2 * 10)
 
 		switch on {
 		case true:
@@ -44,6 +51,10 @@ func main() {
 				separator,
 				digits[s/10],
 				digits[s%10],
+				dot,
+				digits[ms1],
+				digits[ms2],
+				digits[ms3],
 			}
 		case false:
 			clock = [...]digit{
@@ -55,6 +66,10 @@ func main() {
 				blank,
 				digits[s/10],
 				digits[s%10],
+				dot,
+				digits[ms1],
+				digits[ms2],
+				digits[ms3],
 			}
 		}
 
@@ -65,7 +80,13 @@ func main() {
 			fmt.Println()
 		}
 
-		on = !on
-		time.Sleep(time.Second)
+		switch {
+		case s%2 == 0:
+			on = false
+		default:
+			on = true
+		}
+
+		time.Sleep(time.Millisecond * 100)
 	}
 }
