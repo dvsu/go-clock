@@ -187,8 +187,7 @@ func main() {
 
 	for {
 		// clear terminal screen and move cursor to top left corner
-		fmt.Print("\033[H\033[2J")
-
+		fmt.Print("\033[0;0H")
 		// get the latest time
 		t = time.Now()
 		h, m, s = t.Hour(), t.Minute(), t.Second()
@@ -220,7 +219,7 @@ func main() {
 
 		for line := range zero {
 			for dig := range clock {
-				fmt.Printf("%s %s", clock[dig][line], strings.Repeat(" ", 5))
+				fmt.Printf("%s %s", clock[dig][line], strings.Repeat(" ", 3))
 			}
 			fmt.Println()
 		}
