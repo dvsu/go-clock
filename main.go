@@ -2,11 +2,52 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 )
 
+const usage = ".\\go-clock.exe -s [true|false]"
+
 func main() {
+
+	var (
+		l          int = 12
+		max        int = 12
+		cursor     int
+		clock      = [12]digit{}
+		clockSlide = [12]digit{}
+		t          time.Time
+		h          int
+		m          int
+		s          int
+		n          int
+		ms1        int
+		ms2        int
+		ms3        int
+		on         bool = true
+		slide      bool = false
+		forward    bool = false
+	)
+
+	args := os.Args[1:]
+
+	if len(args) == 2 {
+		if args[0] == "-s" {
+			switch {
+			case strings.ToLower(args[1]) == "true":
+				slide = true
+			case strings.ToLower(args[1]) == "false":
+				slide = false
+			default:
+				fmt.Println(usage)
+				return
+			}
+		} else {
+			fmt.Println(usage)
+			return
+		}
+	}
 
 	// uncomment to check whether all digits are correctly displayed on terminal
 
@@ -16,19 +57,6 @@ func main() {
 	// 	}
 	// 	fmt.Println()
 	// }
-
-	var (
-		clock = [12]digit{}
-		t     time.Time
-		h     int
-		m     int
-		s     int
-		n     int
-		ms1   int
-		ms2   int
-		ms3   int
-		on    bool = true
-	)
 
 	for {
 		// clear terminal screen and move cursor to top left corner
@@ -73,18 +101,55 @@ func main() {
 			}
 		}
 
-		for line := range zero {
-			for dig := range clock {
-				fmt.Printf("%s %s", clock[dig][line], strings.Repeat(" ", 3))
+		if slide {
+			if forward {
+				for i := 0; i < max-l; i++ {
+					clockSlide[i] = blank
+				}
+				cursor = max - l
+				for i := cursor; i < max; i++ {
+					clockSlide[i] = clock[i-cursor]
+				}
+				l += 1
+			} else {
+				cursor = max - l
+				for i := 0; i < l; i++ {
+					clockSlide[i] = clock[i+cursor]
+				}
+				for i := l; i < max; i++ {
+					clockSlide[i] = blank
+				}
+				l -= 1
 			}
-			fmt.Println()
-		}
 
-		switch {
-		case s%2 == 0:
-			on = false
-		default:
-			on = true
+			switch l {
+			case 0:
+				forward = true
+			case 12:
+				forward = false
+			}
+
+			for line := range zero {
+				for dig := range clockSlide {
+					fmt.Printf("%s %s", clockSlide[dig][line], strings.Repeat(" ", 3))
+				}
+				fmt.Println()
+			}
+
+		} else {
+			for line := range zero {
+				for dig := range clock {
+					fmt.Printf("%s %s", clock[dig][line], strings.Repeat(" ", 3))
+				}
+				fmt.Println()
+			}
+
+			switch {
+			case s%2 == 0:
+				on = false
+			default:
+				on = true
+			}
 		}
 
 		time.Sleep(time.Millisecond * 100)
